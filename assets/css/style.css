@@ -231,6 +231,8 @@ h6 {
   height: 100vh;
   background: url("../img/hero-bg2.jpg") top center;
   background-size: cover;
+  background-position-x: right !important;
+  background-position-y: top !important;
 }
 
 #hero:before {
