@@ -9,6 +9,128 @@
   "use strict";
 
   /**
+   * Animate Hero Section on Page Load
+   */
+
+  document.body.style.overflow = "hidden";
+  window.scrollTo(0, 0);
+
+  let progress = 0;
+  let unlocked = false;   // ✅ IMPORTANT
+
+  const circle = document.getElementById("progress-circle");
+  const loader = document.getElementById("loader");
+  const hero = document.getElementById("hero-wrapper");
+
+  const maxOffset = 754;
+
+  window.addEventListener("wheel", handleUnlock, { passive: false });
+  window.addEventListener("touchmove", handleUnlock, { passive: false });
+
+  anime({
+    targets: '.warning',
+    opacity: [0.2, 1],
+    scale: [0.9, 1.1],
+    delay: anime.stagger(100),
+    direction: 'alternate',
+    duration: 500,
+    easing: 'easeInOutQuad',
+    loop: true
+  });
+
+  anime({
+    targets: '.orbit',
+    rotate: function(el, i) {
+      return [i * 120, 360 + i * 120];
+    },
+    duration: 14000,
+    easing: 'linear',
+    loop: true
+  });
+
+  anime({
+    targets: '.warning-img',
+    rotate: function(el, i) {
+      return [-(i * 120), -(360 + i * 120)];
+    },
+    duration: 14000,
+    easing: 'linear',
+    loop: true
+  });
+
+  anime({
+    targets: '#shield',
+    scale: [1, 1.20],
+    direction: 'alternate',
+    duration: 800,
+    easing: 'easeInOutSine',
+    loop: true
+  });
+
+  anime({
+    targets: '.scanner-ring',
+    rotate: 360,
+    duration: 4000,
+    easing: 'linear',
+    loop: true
+  });
+
+  anime({
+    targets: '#scroll-text',
+    opacity: [0.4, 1],
+    duration: 900,
+    direction: 'alternate',
+    easing: 'easeInOutSine',
+    loop: true
+  });
+
+
+  function handleUnlock(e) {
+
+    if (!unlocked) e.preventDefault();
+
+    if (unlocked) return;
+
+    progress += 3.5; // sensitivity
+
+    if (progress > 100) progress = 100;
+    const offset = maxOffset - (progress / 100) * maxOffset;
+    circle.style.strokeDashoffset = offset;
+
+    if (progress === 100) {
+      unlocked = true;
+      finishUnlock();
+    }
+  }
+  
+  function finishUnlock() {
+
+    anime({
+      targets: '#loader',
+      opacity: [1, 0],
+      duration: 700,
+      easing: 'easeInOutQuad',
+      complete: () => {
+        loader.style.display = "none";
+        document.body.style.overflow = "auto";
+        document.getElementById("footer").style.display = "block";
+        document.getElementById("navbar").style.display = "block";
+        showHero();
+      }
+    });
+  }
+
+  function showHero() {
+    anime({
+      targets: '#hero-wrapper',
+      opacity: [0, 1],
+      scale: [0.96, 1],
+      duration: 900,
+      easing: 'easeOutExpo'
+    });
+  }
+
+  /**
    * Easy selector helper function
    */
   const select = (el, all = false) => {
